@@ -11,6 +11,7 @@ export class ChatServer {
   private server: Server
   private io: SocketIO.Server
   private port: string | number
+  private messageId: number = 0
 
   constructor() {
     this.config()
@@ -35,8 +36,9 @@ export class ChatServer {
       console.log('Connected client on port %s', this.port)
 
       socket.on('message', (m: Message) => {
+        m.id = ++this.messageId
         console.log('[server](message): %s', JSON.stringify(m))
-        this.io.emit('message', m)
+        socket.broadcast.emit('message', m)
       })
 
       socket.on('disconnect', () => {

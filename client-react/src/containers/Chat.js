@@ -1,26 +1,31 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ChatList } from '../components/ChatList'
+import ChatList from '../components/ChatList'
 import { ChatForm } from '../components/ChatForm'
+import Connection from './Connection'
+
+import { sendMessage } from '../actions/ChatActions'
 
 class Chat extends Component {
+  onButtonClick = e => {
+    this.props.socketConnectAction()
+  }
+
   render() {
-    const { user, chat } = this.props
-    console.log(chat)
+    const { user, chat, sendMessageAction } = this.props
 
     return (
-      <div>
+      <div className='container mt-4'>
+        <Connection />
         <p>Your name is {user.name}</p>
         <ChatList messages={chat.messages} />
-        <ChatForm />
+        <ChatForm sendMessage={sendMessageAction} />
       </div>
     )
   }
 }
 
 const mapStateToProps = store => {
-  console.log(store)
-
   return {
     user: store.user,
     chat: store.chat,
@@ -28,7 +33,9 @@ const mapStateToProps = store => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return {}
+  return {
+    sendMessageAction: message => dispatch(sendMessage(message)),
+  }
 }
 
 export default connect(

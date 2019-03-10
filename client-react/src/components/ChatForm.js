@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 export class ChatForm extends Component {
   state = {
@@ -7,7 +8,10 @@ export class ChatForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault()
-    alert(this.state.value)
+    if (this.state.value) {
+      this.props.sendMessage(this.state.value)
+      this.setState({ value: '' })
+    }
   }
 
   handleChangeValue = e => {
@@ -29,4 +33,8 @@ export class ChatForm extends Component {
       </form>
     )
   }
+}
+
+ChatForm.propTypes = {
+  sendMessage: PropTypes.func.isRequired,
 }
