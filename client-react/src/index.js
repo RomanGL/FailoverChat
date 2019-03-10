@@ -3,14 +3,26 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { store } from './store/configureStore'
 
-import 'bootstrap/dist/css/bootstrap.css'
+import './index.css'
 import App from './containers/App'
 import * as serviceWorker from './serviceWorker'
 
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import deepOrange from '@material-ui/core/colors/purple'
+
+const theme = createMuiTheme({
+  palette: {
+    primary: deepOrange,
+    secondary: deepOrange,
+  },
+})
+
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <MuiThemeProvider theme={theme}>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </MuiThemeProvider>,
   document.getElementById('root')
 )
 

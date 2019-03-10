@@ -1,7 +1,20 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 
-export class ChatForm extends Component {
+const styles = theme => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  input: {
+    margin: theme.spacing.unit,
+  },
+})
+
+class ChatForm extends Component {
   state = {
     value: '',
   }
@@ -19,17 +32,21 @@ export class ChatForm extends Component {
   }
 
   render() {
+    const { classes } = this.props
+
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Text:
-          <input
-            type='text'
-            value={this.state.value}
-            onChange={this.handleChangeValue}
-          />
-        </label>
-        <input type='Submit' value='Send' readOnly={true} />
+      <form onSubmit={this.handleSubmit} className={classes.container}>
+        <TextField
+          label='Message'
+          margin='dense'
+          type='text'
+          value={this.state.value}
+          onChange={this.handleChangeValue}
+          className={classes.input}
+        />
+        <Button variant='contained' type='Submit' className={classes.input}>
+          Send
+        </Button>
       </form>
     )
   }
@@ -37,4 +54,7 @@ export class ChatForm extends Component {
 
 ChatForm.propTypes = {
   sendMessage: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired,
 }
+
+export default withStyles(styles)(ChatForm)

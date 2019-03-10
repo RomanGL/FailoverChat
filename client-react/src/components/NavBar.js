@@ -5,15 +5,14 @@ import Typography from '@material-ui/core/Typography'
 
 const NavBar = () => {
   return (
-    <div>
-      <AppBar position='static'>
-        <Toolbar>
-          <Typography variant='title' color='inherit'>
-            Failover chat
-          </Typography>
-        </Toolbar>
-      </AppBar>
-    </div>
+    <AppBar position='static'>
+      <Toolbar>
+        <Typography variant='h6' color='inherit'>
+          Failover chat
+        </Typography>
+      </Toolbar>
+    </AppBar>
   )
 }
+
 export default NavBar

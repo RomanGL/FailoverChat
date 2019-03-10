@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Button from '@material-ui/core/Button'
 import Snackbar from '@material-ui/core/Snackbar'
-import IconButton from '@material-ui/core/IconButton'
-import CloseIcon from '@material-ui/icons/Close'
+import MySnackbarContent from '../components/MySnackbarContent'
 import { socketConnect } from '../actions/SocketActions'
 
 import {
@@ -43,8 +41,6 @@ class Connection extends Component {
     })
 
     if (this.state.isOpen) {
-      // immediately begin dismissing current message
-      // to start showing new one
       this.setState({ isOpen: false })
     } else {
       this.processQueue()
@@ -83,6 +79,18 @@ class Connection extends Component {
     }
   }
 
+  getMessageVariant = () => {
+    const { socket } = this.props
+    switch (socket.state) {
+      case CONNECTION_STATE_CONNECTING:
+        return 'warning'
+      case CONNECTION_STATE_ALIVE:
+        return 'success'
+      default:
+        return 'info'
+    }
+  }
+
   render() {
     const { messageInfo } = this.state
 
@@ -94,15 +102,15 @@ class Connection extends Component {
           horizontal: 'left',
         }}
         open={this.state.isOpen}
-        autoHideDuration={5000}
+        autoHideDuration={6000}
         onClose={this.handleClose}
-        onExited={this.handleExited}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-        message={<span id='message-id'>{messageInfo.message}</span>}
-        action={[]}
-      />
+        onExited={this.handleExited}>
+        <MySnackbarContent
+          onClose={this.handleClose}
+          variant={this.getMessageVariant()}
+          message={messageInfo.message}
+        />
+      </Snackbar>
     )
   }
 }

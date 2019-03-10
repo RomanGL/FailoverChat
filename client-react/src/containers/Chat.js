@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ChatList from '../components/ChatList'
-import { ChatForm } from '../components/ChatForm'
+import ChatForm from '../components/ChatForm'
 import Connection from './Connection'
+import Typography from '@material-ui/core/Typography'
 
 import { sendMessage } from '../actions/ChatActions'
 
@@ -15,9 +16,9 @@ class Chat extends Component {
     const { user, chat, sendMessageAction } = this.props
 
     return (
-      <div className='container mt-4'>
+      <div>
         <Connection />
-        <p>Your name is {user.name}</p>
+        <Typography variant='subtitle1'>Your name is {user.name}</Typography>
         <ChatList messages={chat.messages} />
         <ChatForm sendMessage={sendMessageAction} />
       </div>
