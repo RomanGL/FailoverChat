@@ -9,8 +9,10 @@ import Avatar from '@material-ui/core/Avatar'
 const styles = theme => ({
   root: {
     width: '100%',
-    maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
+  },
+  avatar: {
+    marginTop: '5px',
   },
 })
 
@@ -22,8 +24,8 @@ class ChatList extends Component {
       <List className={classes.root}>
         {messages.map(m => (
           <React.Fragment>
-            <ListItem>
-              <Avatar>{m.user.name[0]}</Avatar>
+            <ListItem alignItems='flex-start'>
+              <Avatar className={classes.avatar}>{m.user.name[0]}</Avatar>
               <ListItemText primary={m.content} secondary={m.user.name} />
             </ListItem>
           </React.Fragment>
