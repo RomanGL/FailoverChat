@@ -7,9 +7,13 @@ import Button from '@material-ui/core/Button'
 const styles = theme => ({
   container: {
     display: 'flex',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
   },
   input: {
+    margin: theme.spacing.unit,
+    width: '100%',
+  },
+  inputButton: {
     margin: theme.spacing.unit,
   },
 })
@@ -44,7 +48,10 @@ class ChatForm extends Component {
           onChange={this.handleChangeValue}
           className={classes.input}
         />
-        <Button variant='contained' type='Submit' className={classes.input}>
+        <Button
+          variant='contained'
+          type='Submit'
+          className={classes.inputButton}>
           Send
         </Button>
       </form>

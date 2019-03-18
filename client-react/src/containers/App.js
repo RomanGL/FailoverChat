@@ -5,10 +5,10 @@ import NavBar from '../components/NavBar'
 class App extends Component {
   render() {
     return (
-      <React.Fragment>
+      <div>
         <NavBar />
         <Chat />
-      </React.Fragment>
+      </div>
     )
   }
 }
