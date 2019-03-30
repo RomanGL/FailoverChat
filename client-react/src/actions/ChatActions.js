@@ -4,11 +4,9 @@ export const SEND_MESSAGE_FAIL = 'SEND_MESSAGE_FAIL'
 
 export const RECEIVED_MESSAGE = 'RECEIVED_MESSAGE'
 
-let idCounter = 0
-
 export function sendMessage(message) {
   return (dispatch, getState) => {
-    idCounter++
+    const messageId = Date.now()
 
     dispatch({
       type: SEND_MESSAGE_REQUEST,
@@ -17,7 +15,7 @@ export function sendMessage(message) {
           name: 'Unknown',
         },
         content: message,
-        id: idCounter,
+        id: messageId,
       },
     })
 
@@ -27,7 +25,7 @@ export function sendMessage(message) {
         name: 'Unknown',
       },
       content: message,
-      id: idCounter,
+      id: messageId,
     })
   }
 }
