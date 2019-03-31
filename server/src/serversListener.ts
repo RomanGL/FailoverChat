@@ -25,20 +25,30 @@ export class ServersListener {
   }
 
   private connect(server: ServerInfo): void {
-    const socket = socketIoClient(server.getUrl())
+    const serverUrl = server.getUrl() + '/server'
+    const socket = socketIoClient(serverUrl)
 
     socket.on('connect', () => {
-      console.log('Connected to server %s', server.getUrl())
+      console.log('Connected to server %s', serverUrl)
     })
 
     socket.on('disconnect', () => {
-      console.log('Disconnected from server %s', server.getUrl())
+      console.log('Disconnected from server %s', serverUrl)
     })
 
     socket.on('message', (m: Message) => {
-      console.log(`${server.getUrl()}: ${JSON.stringify(m)}`)
+      console.log(
+        `${serverUrl}: Message sent: {id: ${m.id}, from: ${m.user.name}}`
+      )
+
       this.chatHistory.add(m)
       this.onNewMessage(m)
+    })
+
+    socket.on('history', (history: Message[]) => {
+      console.log(
+        `${serverUrl} sent history: ${history.length} messages received`
+      )
     })
   }
 }

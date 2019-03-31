@@ -1,6 +1,7 @@
 import { ChatServer } from './chatServer'
 
 process.env.PORT = process.argv[2]
+setupLog()
 
 const chatServer = new ChatServer()
 const app = chatServer.getApp()
@@ -16,5 +17,37 @@ app.get('/history', (req, res) => {
   const history = chatServer.getHistory()
   res.json(history)
 })
+
+function setupLog() {
+  let log = console.log
+  console.log = function() {
+    var first_parameter = arguments[0]
+    var other_parameters = Array.prototype.slice.call(arguments, 1)
+
+    function formatConsoleDate(date: Date) {
+      var hour = date.getHours()
+      var minutes = date.getMinutes()
+      var seconds = date.getSeconds()
+      var milliseconds = date.getMilliseconds()
+
+      return (
+        '[' +
+        (hour < 10 ? '0' + hour : hour) +
+        ':' +
+        (minutes < 10 ? '0' + minutes : minutes) +
+        ':' +
+        (seconds < 10 ? '0' + seconds : seconds) +
+        '.' +
+        ('00' + milliseconds).slice(-3) +
+        '] '
+      )
+    }
+
+    log.apply(
+      console,
+      [formatConsoleDate(new Date()) + first_parameter].concat(other_parameters)
+    )
+  }
+}
 
 export { app }

@@ -2,7 +2,7 @@ export class ServerInfo {
   constructor(public url: string, public port: number) {}
 
   public getUrl(): string {
-    return `${this.url}:${this.port}/server`
+    return `${this.url}:${this.port}`
   }
 
   public equalsTo(other: ServerInfo): boolean {

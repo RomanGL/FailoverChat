@@ -1,5 +1,5 @@
 import { User } from './user'
 
 export class Message {
-  constructor(public from: User, public content: string, public id: number) {}
+  constructor(public user: User, public content: string, public id: number) {}
 }

@@ -44,7 +44,7 @@ export function socketConnect() {
       },
     })
 
-    const socket = io(server.url, {
+    const socket = io(server.url + '/client', {
       autoConnect: false,
       reconnection: false,
     })

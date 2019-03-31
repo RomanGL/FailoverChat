@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChatList from '../components/ChatList'
 import ChatForm from '../components/ChatForm'
-import Connection from './Connection'
 import Typography from '@material-ui/core/Typography'
 
 import { sendMessage, getHistory } from '../actions/ChatActions'
@@ -31,7 +30,6 @@ class Chat extends Component {
 
     return (
       <React.Fragment>
-        <Connection />
         <Button onClick={this.onButtonClick}>Fetch history</Button>
         {chat.history.isFetching && (
           <Typography variant='h6'>Loading history...</Typography>

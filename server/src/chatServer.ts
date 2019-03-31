@@ -53,13 +53,14 @@ export class ChatServer {
     })
 
     const serverSocket = this.io.of('server')
+    const clientSocket = this.io.of('client')
 
-    this.io.on('connect', (socket: Socket) => {
-      console.log('Connected client on port %s', this.serverInfo.port)
+    clientSocket.on('connect', (socket: Socket) => {
+      console.log('Connected client')
 
       socket.on('message', (m: Message) => {
         this.chatHistory.add(m)
-        console.log('[server](message): %s', JSON.stringify(m))
+        console.log(`Message sent: {id: ${m.id}, from: ${m.user.name}}`)
 
         socket.broadcast.emit('message', m)
         serverSocket.emit('message', m)
@@ -71,11 +72,16 @@ export class ChatServer {
     })
 
     serverSocket.on('connect', (socket: Socket) => {
-      console.log(`Server connected to the instance`)
+      console.log(`Connected server. Sending history...`)
+      socket.emit('history', this.chatHistory.getHistory())
+    })
+
+    serverSocket.on('disconnect', () => {
+      console.log('Server disconnected')
     })
   }
 
   private broadcastMessage = (m: Message): void => {
-    this.io.emit('message', m)
+    this.io.of('client').emit('message', m)
   }
 }
