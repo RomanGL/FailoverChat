@@ -6,8 +6,8 @@ import ChatForm from '../components/ChatForm'
 import Connection from './Connection'
 import Typography from '@material-ui/core/Typography'
 
-import { sendMessage } from '../actions/ChatActions'
-import { withStyles } from '@material-ui/core'
+import { sendMessage, getHistory } from '../actions/ChatActions'
+import { withStyles, Button } from '@material-ui/core'
 
 const styles = theme => ({
   container: {
@@ -23,7 +23,7 @@ const styles = theme => ({
 
 class Chat extends Component {
   onButtonClick = e => {
-    this.props.socketConnectAction()
+    this.props.getHistoryAction()
   }
 
   render() {
@@ -32,6 +32,16 @@ class Chat extends Component {
     return (
       <React.Fragment>
         <Connection />
+        <Button onClick={this.onButtonClick}>Fetch history</Button>
+        {chat.history.isFetching && (
+          <Typography variant='h6'>Loading history...</Typography>
+        )}
+        {chat.history.error && (
+          <Typography variant='h6'>
+            An error occured: {chat.history.error}
+          </Typography>
+        )}
+
         <div className={classes.container}>
           <Typography variant='h6'>Your name is {user.name}</Typography>
           <ChatList messages={chat.messages} />
@@ -58,6 +68,7 @@ const mapStateToProps = store => {
 const mapDispatchToProps = dispatch => {
   return {
     sendMessageAction: message => dispatch(sendMessage(message)),
+    getHistoryAction: () => dispatch(getHistory()),
   }
 }
 

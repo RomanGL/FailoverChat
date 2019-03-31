@@ -34,6 +34,10 @@ export class ChatServer {
     this.listen()
   }
 
+  public getHistory(): Message[] {
+    return this.chatHistory.getHistory()
+  }
+
   public getApp(): express.Application {
     return this.app
   }
