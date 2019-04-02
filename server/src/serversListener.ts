@@ -1,9 +1,8 @@
-import { Message, ServerInfo } from './model'
+import { Message, MessageData, ServerInfo } from './model'
 import { ChatHistory } from './chatHistory'
-import { Socket } from 'socket.io'
 import socketIoClient from 'socket.io-client'
 
-export type NewMessageCallback = (m: Message) => void
+export type NewMessageCallback = (m: MessageData) => void
 
 export class ServersListener {
   private static readonly SERVERS: ServerInfo[] = [
@@ -13,9 +12,9 @@ export class ServersListener {
   ]
 
   constructor(
-    private currentServer: ServerInfo,
-    private chatHistory: ChatHistory,
-    private onNewMessage: NewMessageCallback
+    private readonly currentServer: ServerInfo,
+    private readonly chatHistory: ChatHistory,
+    private readonly onNewMessage: NewMessageCallback
   ) {}
 
   public listen(): void {
@@ -36,18 +35,22 @@ export class ServersListener {
       console.log('Disconnected from server %s', serverUrl)
     })
 
-    socket.on('message', (m: Message) => {
+    socket.on('message', (data: MessageData) => {
       console.log(
-        `${serverUrl}: Message sent: {id: ${m.id}, from: ${m.user.name}}`
+        `${serverUrl}: Message sent: {id: ${data.id}, from: ${data.user.name}}`
       )
 
-      this.chatHistory.add(m)
-      this.onNewMessage(m)
+      this.chatHistory.add(Message.fromData(data))
+      this.onNewMessage(data)
     })
 
-    socket.on('history', (history: Message[]) => {
+    socket.on('history', (historyData: MessageData[]) => {
       console.log(
-        `${serverUrl} sent history: ${history.length} messages received`
+        `${serverUrl} sent history: ${historyData.length} messages received`
+      )
+
+      this.chatHistory.mergeHistory(
+        historyData.map(data => Message.fromData(data))
       )
     })
   }

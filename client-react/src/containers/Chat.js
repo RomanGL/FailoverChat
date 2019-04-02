@@ -6,7 +6,7 @@ import ChatForm from '../components/ChatForm'
 import Typography from '@material-ui/core/Typography'
 
 import { sendMessage, getHistory } from '../actions/ChatActions'
-import { withStyles, Button } from '@material-ui/core'
+import { withStyles } from '@material-ui/core'
 
 const styles = theme => ({
   container: {
@@ -21,16 +21,11 @@ const styles = theme => ({
 })
 
 class Chat extends Component {
-  onButtonClick = e => {
-    this.props.getHistoryAction()
-  }
-
   render() {
     const { classes, user, chat, sendMessageAction } = this.props
 
     return (
       <React.Fragment>
-        <Button onClick={this.onButtonClick}>Fetch history</Button>
         {chat.history.isFetching && (
           <Typography variant='h6'>Loading history...</Typography>
         )}
@@ -54,6 +49,9 @@ class Chat extends Component {
 
 Chat.propTypes = {
   classes: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  chat: PropTypes.object.isRequired,
+  sendMessageAction: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = store => {

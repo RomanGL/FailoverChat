@@ -1,5 +1,5 @@
 import io from 'socket.io-client'
-import { receiveMessage } from './ChatActions'
+import { receiveMessage, getHistory } from './ChatActions'
 
 export const SERVER_CONNECT_REQUEST = 'SERVER_CONNECT_REQUEST'
 export const SERVER_CONNECT_SUCCESS = 'SERVER_CONNECT_SUCCESS'
@@ -58,6 +58,7 @@ export function socketConnect() {
             socket: socket,
           },
         })
+        dispatch(getHistory())
       })
       .on('connect_error', () => {
         server.isAlive = false

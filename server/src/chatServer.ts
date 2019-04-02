@@ -2,7 +2,7 @@ import express from 'express'
 import { createServer, Server } from 'http'
 import socketIo, { Socket } from 'socket.io'
 
-import { Message, ServerInfo } from './model'
+import { Message, MessageData, ServerInfo } from './model'
 import { ServersListener } from './serversListener'
 import { ChatHistory } from './chatHistory'
 
@@ -58,12 +58,12 @@ export class ChatServer {
     clientSocket.on('connect', (socket: Socket) => {
       console.log('Connected client')
 
-      socket.on('message', (m: Message) => {
-        this.chatHistory.add(m)
-        console.log(`Message sent: {id: ${m.id}, from: ${m.user.name}}`)
+      socket.on('message', (data: MessageData) => {
+        console.log(`Message sent: {id: ${data.id}, from: ${data.user.name}}`)
+        this.chatHistory.add(Message.fromData(data))
 
-        socket.broadcast.emit('message', m)
-        serverSocket.emit('message', m)
+        socket.broadcast.emit('message', data)
+        serverSocket.emit('message', data)
       })
 
       socket.on('disconnect', () => {
@@ -81,7 +81,7 @@ export class ChatServer {
     })
   }
 
-  private broadcastMessage = (m: Message): void => {
-    this.io.of('client').emit('message', m)
+  private broadcastMessage = (data: MessageData): void => {
+    this.io.of('client').emit('message', data)
   }
 }
