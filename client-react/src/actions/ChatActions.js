@@ -10,15 +10,30 @@ export const GET_HISTORY_REQUEST = 'GET_HISTORY_REQUEST'
 export const GET_HISTORY_SUCCESS = 'GET_HISTORY_SUCCESS'
 export const GET_HISTORY_FAIL = 'GET_HISTORY_FAIL'
 
+export const MESSAGE_ACTIONS = {
+  NONE: -1,
+  JOINED: 0,
+  LEFT: 1,
+  RENAME: 2,
+}
+
 export function sendMessage(message) {
+  return sendMessageWithAction(message, MESSAGE_ACTIONS.NONE)
+}
+
+export function sendMessageWithAction(message, action) {
   return (dispatch, getState) => {
     const messageId = Date.now()
     const msg = {
       user: {
-        name: 'Unknown',
+        name: getState().user.name,
       },
       content: message,
       id: messageId,
+    }
+
+    if (action !== MESSAGE_ACTIONS.NONE) {
+      msg.action = action
     }
 
     dispatch({

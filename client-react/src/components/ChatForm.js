@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
 
 const styles = theme => ({
   container: {
@@ -12,9 +11,6 @@ const styles = theme => ({
   input: {
     margin: theme.spacing.unit,
     width: '100%',
-  },
-  inputButton: {
-    margin: theme.spacing.unit,
   },
 })
 
@@ -48,12 +44,6 @@ class ChatForm extends Component {
           onChange={this.handleChangeValue}
           className={classes.input}
         />
-        <Button
-          variant='contained'
-          type='Submit'
-          className={classes.inputButton}>
-          Send
-        </Button>
       </form>
     )
   }

@@ -2,9 +2,11 @@ import express from 'express'
 import { createServer, Server } from 'http'
 import socketIo, { Socket } from 'socket.io'
 
-import { Message, MessageData, ServerInfo } from './model'
+import { Message, MessageData, ServerInfo, UserData, User } from './model'
 import { ServersListener } from './serversListener'
 import { ChatHistory } from './chatHistory'
+import Hash from './model/common/hash'
+import MessageAction from './model/messageAction'
 
 export class ChatServer {
   public static readonly DEFAULT_PORT: number = 4000
@@ -15,6 +17,7 @@ export class ChatServer {
   private serversListener: ServersListener
   private serverInfo: ServerInfo
   private chatHistory: ChatHistory
+  private onlineUsers: Hash<UserData> = {}
 
   constructor() {
     this.config()
@@ -56,10 +59,11 @@ export class ChatServer {
     const clientSocket = this.io.of('client')
 
     clientSocket.on('connect', (socket: Socket) => {
-      console.log('Connected client')
+      console.log('Connected client: %s', socket.id)
 
       socket.on('message', (data: MessageData) => {
         console.log(`Message sent: {id: ${data.id}, from: ${data.user.name}}`)
+        this.onlineUsers[socket.id] = data.user
         this.chatHistory.add(Message.fromData(data))
 
         socket.broadcast.emit('message', data)
@@ -67,7 +71,21 @@ export class ChatServer {
       })
 
       socket.on('disconnect', () => {
-        console.log('Client disconnected')
+        console.log('Client disconnected: %s', socket.id)
+
+        const leftUser = this.onlineUsers[socket.id]
+        delete this.onlineUsers[socket.id]
+
+        const msg = new Message(
+          User.fromData(leftUser),
+          null,
+          Date.now(),
+          MessageAction.LEFT
+        )
+
+        this.chatHistory.add(msg)
+        clientSocket.emit('message', msg)
+        serverSocket.emit('message', msg)
       })
     })
 
